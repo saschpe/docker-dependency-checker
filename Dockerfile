@@ -33,7 +33,7 @@ RUN wget --quiet https://github.com/jeremylong/DependencyCheck/releases/download
 
 USER ${user}
 # Update CVE database initially
-RUN /opt/dependency-check/bin/dependency-check.sh --scan .
+RUN /opt/dependency-check/bin/dependency-check.sh --scan . || :
 
 VOLUME /usr/share/dependency-check/data
 

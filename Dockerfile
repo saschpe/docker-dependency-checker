@@ -1,8 +1,7 @@
 #
 # OWASP Dependency Checker container image.
 #
-#
-#   $ ./scripts/build --push
+#   $ ./scripts/build --help
 #
 # Build with custom arguments:
 #
@@ -14,8 +13,8 @@ ARG jdk=17.0.6_10
 FROM eclipse-temurin:${jdk}-jre
 ARG release=8.2.1
 LABEL org.opencontainers.image.authors="Sascha Peilicke <sascha@peilicke.de"
-LABEL org.opencontainers.image.title="OWASP Dependency Checker"
 LABEL org.opencontainers.image.source="https://github.com/saschpe/docker-dependency-checker"
+LABEL org.opencontainers.image.title="OWASP Dependency Checker"
 ENV user=dc
 
 # Fetch and install
@@ -30,12 +29,13 @@ RUN wget --quiet https://github.com/jeremylong/DependencyCheck/releases/download
     useradd --system --no-create-home --user-group ${user} && \
     mkdir -p /opt/dependency-check/data && \
     chown -R ${user}:${user} /opt/dependency-check/
-
 USER ${user}
-# Update CVE database initially
-RUN /opt/dependency-check/bin/dependency-check.sh --scan . || :
 
-VOLUME /usr/share/dependency-check/data
+# Update CVE database initially
+RUN /opt/dependency-check/bin/dependency-check.sh --updateonly
+
+VOLUME /src /opt/dependency-check/data
+WORKDIR /src
 
 CMD ["--help"]
-ENTRYPOINT [ "/opt/dependency-check/bin/dependency-check.sh" ]
+ENTRYPOINT ["/opt/dependency-check/bin/dependency-check.sh"]

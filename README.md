@@ -9,10 +9,17 @@ OWASP Dependency Checker OCI container image.
 
 ## Using
 
-Use like you would any other base image:
+By default, the tool stores generated reports in the `/src/` folder inside the container. To gain
+access, use a volume mount:
 
 ```shell
-docker run --rm saschpe/dependency-checker --scan .
+docker run -v $PWD/reports:/src saschpe/dependency-checker --scan .
+```
+
+A more complete example might look like this:
+
+```shell
+docker run --volume $PWD/reports:/src saschpe/dependency-checker --enableExperimental --failOnCVSS 7 --project my-project --format ALL --scan .
 ```
 
 ## Building

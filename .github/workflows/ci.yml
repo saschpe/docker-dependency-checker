@@ -40,6 +40,7 @@ jobs:
             ghcr.io/${{ env.IMAGE }}
           tags: |
             type=raw,value=${{ matrix.release }}
+            type=raw,value=latest,enable={{is_default_branch}}
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v2
       - name: Set up Docker BuildX
